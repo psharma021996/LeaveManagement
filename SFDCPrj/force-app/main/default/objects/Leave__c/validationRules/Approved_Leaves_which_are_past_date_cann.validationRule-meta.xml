@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Approved_Leaves_which_are_past_date_cann</fullName>
+    <active>true</active>
+    <description>Approved Leaves which are past date cannot be updated/deleted</description>
+    <errorConditionFormula>ISPICKVAL( Status__c , &apos;Approved&apos;)   &amp;&amp;  End_Date__c  &lt;  TODAY()</errorConditionFormula>
+    <errorMessage>You cannot modify past approved leave</errorMessage>
+</ValidationRule>

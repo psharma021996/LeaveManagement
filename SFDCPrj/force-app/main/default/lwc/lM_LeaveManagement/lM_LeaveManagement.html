@@ -1,0 +1,99 @@
+<template>
+    <lightning-layout multiple-rows="true">
+        
+        <lightning-layout-item class="slds-p-around_xx-small" size="12">
+          <lightning-layout>
+            
+            <lightning-layout-item class="slds-p-around_xx-small" size=2>
+                <div class="slds-box slds-theme_default">
+                    <div style="display: inline-flex; width: 200px;" class="slds-m-around_small">
+                        <lightning-button variant="brand" onclick={applyForLeaveMethod} style=" width: 100%;" label="Apply for Leave" title="Apply for Leave"  class="slds-m-left_x-small"></lightning-button>                  
+                    </div>
+                    <div  style="display: inline-flex; width: 200px;" class="slds-m-around_small">
+                        <lightning-button variant="brand" onclick={myleaveHistoryMethod} style=" width: 100%;" label="My Leave History" title="My Leave History"  class="slds-m-left_x-small"></lightning-button>                    
+                    </div>
+                    <div  style="display: inline-flex; width: 200px;" class="slds-m-around_small">
+                        <lightning-button variant="brand"  onclick={teamLeaveRequestMethod} style=" width: 100%;" label="Team Leave Request" title="Team Leave Request"  class="slds-m-left_x-small"></lightning-button>                    
+                    </div>
+                </div>
+                
+              </lightning-layout-item>
+            
+            <!-- Show below part on click of Apply for Leave-->
+            <template if:true={applyforLeave}>
+              <lightning-layout-item class="slds-p-around_xx-small" size=10>
+                <lightning-card  icon-name="standard:record">
+
+                    <div class="slds-m-around_medium">
+                        <div>Leave Used So Far : </div>
+                        <div>Leaves Remaining : {varMyleaveBalance}</div>
+                        <div class="slds-grid slds-form__row">
+                            <lightning-input label="Leave Balance" disabled value={varMyleaveBalance}  type="text" class="slds-col"></lightning-input>
+                            <div> Leave Type
+                                <select class="slds-select" onchange={selectOptionChanveValue}>
+                                    <option value="">---None---</option>                
+                                        <template for:each={selectTargetValues.data} for:item="selectOptItem">
+                                           <option key={selectOptItem.custFldvalue} value={selectOptItem.custFldvalue}>
+                                             {selectOptItem.custFldlabel}
+                                           </option>
+                                      </template>
+                                </select>  
+                            </div>                            
+                        </div>
+                        <div class="slds-grid slds-form__row">
+                            <lightning-input type="date" label="Leave Start Date" value={startDateValue} class="slds-col" onchange ={handleStartDateChange}></lightning-input>
+                            <lightning-input type="date" label="Leave End Date" value={endDateValue} class="slds-col" onchange ={handleEndDateChange}></lightning-input>
+                        </div>       
+
+                        <lightning-input label="Reason"   value ={ReasonValue} name="Reason" onchange ={handleReasonChange} class="slds-m-bottom_x-medium"></lightning-input>
+                        <lightning-button label="Submit" variant="brand" onclick={createLeaveRecord}></lightning-button>
+                        <lightning-button label="Cancel" variant="brand" onclick={BlankPopulatedValue}></lightning-button>
+                    </div>
+                 </lightning-card>
+              </lightning-layout-item> 
+            </template>
+              <!-- Show below part on click of My Leave History-->
+              <template if:true={bmyLeaveHistory}>
+              <lightning-layout-item class="slds-p-around_xx-small" size=10>
+                <lightning-card  icon-name="standard:record">
+                    <div class="slds-m-around_medium">
+                        
+                        <lightning-datatable
+                            
+                            hide-checkbox-column="true"
+                            key-field="name"
+                            data={leaveHistory}
+                            columns={MyLeaveHistoryColumns}
+                            
+                            >
+                        </lightning-datatable> 
+                       
+                    </div>
+                 </lightning-card>
+              </lightning-layout-item>
+            </template>
+              <!-- Show below part on click of Team Leave Request-->
+              <template if:true={bTeamLeaveRequest}>
+              <lightning-layout-item class="slds-p-around_xx-small" size=10>
+                <lightning-card  icon-name="standard:record">
+                    <div class="slds-m-around_medium">
+                        
+                        <lightning-datatable
+                            key-field="leaveId"
+                            data={TeamLeaveRequests}
+                            columns={TeamLeaveRequestColumns}
+                            onrowselection={enableApproveButton}>
+                        </lightning-datatable> 
+                        <template if:true={TeamLeaveRowSelected}>
+                            <lightning-button label="Approve" onclick={approveLeaveM} variant="brand" ></lightning-button>
+                            <lightning-button label="Reject" onclick={rejectLeaveM} variant="brand" ></lightning-button> 
+                        </template>
+                           
+                    </div>
+                 </lightning-card>
+              </lightning-layout-item> 
+            </template>
+          </lightning-layout>
+        </lightning-layout-item>
+      </lightning-layout>
+</template>
