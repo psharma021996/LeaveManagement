@@ -1,0 +1,63 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" 
+                controller="LM_LeaveManagementController">
+    <aura:attribute name="bApplyForLeave" type="boolean" default="true" />
+    <aura:attribute name="bLeaveHistory" type="boolean" default="false"/>
+    <aura:attribute name="bLeaveReq" type="boolean"  default="false" />
+    <aura:attribute name="myleaveHistoy" type="Leave__c[]" />
+    <aura:attribute name="mycolumns" type="List"/>
+    <aura:attribute name="TeamLeaveRequestColumns" type="List"/>
+    <lightning:layout verticalAlign="stretch" multipleRows="true" class="x-large">
+         <lightning:layoutItem flexibility="auto" padding="around-small" class="custom-box">
+             <lightning:button  onclick="{!c.applyForLeaveMethod}" label="Apply for Leave"/><br/>
+    		<lightning:button  onclick="{!c.myleaveHistoryMethod}"  label="My Leave History"/>    <br/>               
+    		<lightning:button  onclick="{!c.teamLeaveRequestMethod}"  label="Team Leave Request" />   <br/>
+        </lightning:layoutItem>  
+        
+        <lightning:layoutItem flexibility="auto" padding="around-small" class="custom-box">
+            <aura:if isTrue="{!v.bApplyForLeave}">    			
+                 <lightning:card  >
+                    <div class="slds-m-around_medium">
+                        <div>Leave Used So Far : </div>
+                        <div>Leaves Remaining : {varMyleaveBalance}</div>
+                        <div class="slds-grid slds-form__row">
+                            <lightning:select label="Leave Balance"  />
+                            <div> Leave Type
+                                <select class="slds-select" onchange="{selectOptionChanveValue}">
+                                    <option value="">---None---</option>                
+                                        <!--<template for:each={selectTargetValues.data} for:item="selectOptItem">
+                                           <option key={selectOptItem.custFldvalue} value={selectOptItem.custFldvalue}>
+                                             {selectOptItem.custFldlabel}
+                                           </option>
+                                      </template> -->
+                                </select>  
+                            </div>                            
+                        </div>
+                        <div class="slds-grid slds-form__row">
+                            <lightning:input type="date" label="Leave Start Date"  class="slds-col" onchange ="{handleStartDateChange}"/>
+                                <lightning:input type="date" label="Leave End Date"  class="slds-col" onchange ="{handleEndDateChange}"/>
+                        </div>       
+
+                        <lightning:input label="Reason"    name="Reason" onchange ="{handleReasonChange}" class="slds-m-bottom_x-medium"/>
+                        <lightning:button label="Submit" variant="brand" onclick="{createLeaveRecord}"/>
+                        <lightning:button label="Cancel" variant="brand" onclick="{BlankPopulatedValue}"/>
+                    </div>
+                 </lightning:card>
+    		</aura:if> 
+            <aura:if isTrue="{!v.bLeaveHistory}">
+                <lightning:card  >
+    			<lightning:datatable data="{! v.myleaveHistoy }"
+                         columns="{! v.mycolumns }"
+                         keyField="id"
+                         hideCheckboxColumn="true"/>
+                </lightning:card>
+    		</aura:if> 
+            <aura:if isTrue="{!v.bLeaveReq}">
+    			<lightning:datatable data="{! v.myleaveHistoy }"
+                         columns="{! v.TeamLeaveRequestColumns }"
+                         keyField="id"
+                         hideCheckboxColumn="true"/>
+    		</aura:if>           
+        </lightning:layoutItem>
+                  
+</lightning:layout>	
+</aura:component>
